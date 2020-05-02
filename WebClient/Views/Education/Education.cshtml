@@ -1,0 +1,104 @@
+﻿@model ReportModel
+@{
+    ViewData["Title"] = "Курс";
+}
+
+<div class="text-center text-info">
+    <h1>Курс</h1>
+</div>
+<hr />
+<p> <strong> <a class="btn btn-info btn-sm" asp-area="" asp-controller="education" asp-action="CreateEducation">Оформить</a></strong></p>
+<hr />
+@using (Html.BeginForm())
+{
+    <p>
+        Выберите даты для отображения отчета по курсам и получению оплаты
+    </p>
+    <p>
+        От: @Html.EditorFor(model => model.From)
+    </p>
+    <p>
+        До: @Html.EditorFor(model => model.To)
+    </p>
+    <p>
+        @Html.EditorFor(model => model.SendMail) Отправить отчётпо курсам и получению оплаты на почту
+    </p>
+    <p>
+        <button type="submit" class="btn btn-info btn-sm">Получить</button>
+    </p>
+}
+<hr />
+@foreach (var education in ViewBag.educations)
+{
+    <p><strong>Номер: @education.Id </strong></p>
+    <p>Дата создания: @education.DateOfBuying</p>
+    <p>Статус: @education.Status</p>
+    <p>Цена: @education.FinalCost</p>
+    <p>Общая длительность: @education.Duration</p>
+    <p>Состав:</p>
+    <table class="table">
+        <tr>
+            <td>Лекция</td>
+            <td>Специальность</td>
+            <td>Длительность</td>
+            <td>Количество</td>
+            <td>Цена</td>
+        </tr>
+        @foreach (var course in education.EducationCourses)
+        {
+            <tr>
+                <td>@course.CourseName</td>
+                <td>@course.Specialication</td>
+                <td>@course.Duration</td>
+                <td>@course.Count</td>
+                <td>@course.Cost</td>
+            </tr>
+        }
+    </table>
+    if (education.Status != BusinessLogic.Enums.EducationStatus.Имеется && ViewBag.Payments != null)
+    {
+        <p>Получение оплаты:</p>
+        <table class="table">
+            <tr>
+                <td>Дата</td>
+                <td>Сумма</td>
+            </tr>
+            @foreach (var payment in ViewBag.Payments)
+            {
+                if (payment.EducationId == education.Id)
+                {
+                    <tr>
+                        <td>@payment.DatePayment</td>
+                        <td>@payment.Sum</td>
+                    </tr>
+                }
+            }
+        </table>
+    }
+    <hr />
+    if (education.Status == BusinessLogic.Enums.EducationStatus.Получено)
+    {
+        <p>Полностью забрана оплата</p>
+        <hr />
+    }
+    else
+    {
+        if (education.Status == BusinessLogic.Enums.EducationStatus.Получено_не_полностью)
+        {
+            <p>Возможно забрать: @education.LeftSum</p>
+            <hr />
+
+        }
+        <p>
+            <a href="/Education/Payment/@education.Id">Забрать плату</a>
+        </p>
+    }
+    <p>
+        <a href="/Education/SendWordReport/@education.Id">Отправить список лекций в формате .docx</a>
+    </p>
+    <p>
+        <a href="/Education/SendExcelReport/@education.Id">Отправить список лекций в формате .xslx</a>
+    </p>
+    <hr />
+
+}

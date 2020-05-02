@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "Курсы";
+}
+    <div class="text-center text-info">
+        <h1>Лекции</h1>
+    </div>
+<table class="table">
+    <tr>
+        <td>Название</td>
+        <td>Специализация</td>
+        <td>Длительность</td>
+        <td>Цена</td>
+    </tr>
+    @foreach (var course in ViewBag.courses)
+    {
+        <tr>
+            <td>@course.CourseName</td>
+            <td>@course.Specialication</td>
+            <td>@course.Duration</td>
+            <td>@course.Cost</td>
+        </tr>
+    }
+</table>

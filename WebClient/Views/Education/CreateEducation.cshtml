@@ -1,0 +1,35 @@
+﻿@model WebClient.Models.CreateEducationModel
+@{ ViewData["Title"] = "Создать Курс"; }
+
+<div class="text-center text-info">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<hr />
+
+@using (Html.BeginForm())
+{
+          @Html.ValidationSummary(true, "", new { @style = "color: red" })
+          <p>Состав:</p>
+          <table class="table">
+              <tr>
+                  <td>Лекция</td>
+                   <td>Специализация</td>
+                   <td>Длительность</td>
+                    <td>Количество</td>
+                    <td>Цена</td>
+              </tr>
+              @foreach (BusinessLogic.ViewModel.CourseViewModel course in ViewBag.EducationCourses)
+               {
+                <tr>
+                    <td>@course.CourseName</td>
+                     <td>@course.Specialication</td>
+                    <td>@course.Duration</td>
+                    <td><input type="number" name="Model.EducationCourses[@course.Id]" value="0" /></td>
+                    <td>@course.Cost</td>
+               </tr>
+              }
+
+          </table>
+
+             <button type="submit" class="btn btn-info btn-sm">Создать</button>
+ }
